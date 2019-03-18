@@ -8,7 +8,9 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "vue": "^2.6.6"
+    "element-ui": "^2.6.1",
+    "vue": "^2.6.6",
+    "vuedraggable": "^2.19.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.1",
