@@ -1,31 +1,31 @@
 export const guid = () => {
-  const S4 = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-  return S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4();
-};
+  const S4 = () => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+  return S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4()
+}
 
 export const getHtml4String = (val) => {
-  let html = '';
-  let obj = {};
+  let html = ''
+  let obj = {}
 
   val.forEach((data, index) => {
-    html += (index === 0 ? '' : '\n') + data.html;
-    Object.assign(obj, data.data);
-  });
+    html += (index === 0 ? '' : '\n') + data.html
+    Object.assign(obj, data.data)
+  })
 
-  const aaa = JSON.stringify(obj, null, 2).split('\n');
-  let json = '';
+  const aaa = JSON.stringify(obj, null, 2).split('\n')
+  let json = ''
   aaa.forEach(function(v, i) {
-    const a = v.split(':');
+    const a = v.split(':')
 
     if (a.length === 1) {
       if (i !== 0) {
-        json += '    ';
+        json += '    '
       }
-      json += v + '\n';
+      json += v + '\n'
     } else {
-      json += `    ${(a[0] || '').replace(/"/g, '')}:${(a[1] || '').replace(/"/g, "'")}\n`;
+      json += `    ${(a[0] || '').replace(/"/g, '')}:${(a[1] || '').replace(/"/g, "'")}\n`
     }
-  });
+  })
 
   const returnHtml =
     '<template>\n' +
@@ -44,7 +44,7 @@ export const getHtml4String = (val) => {
     '<' +
     '/script>\n' +
     '<style lang="scss" scoped>\n' +
-    '</style>';
+    '</style>'
 
-  return returnHtml;
-};
+  return returnHtml
+}

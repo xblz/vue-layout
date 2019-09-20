@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { guid } from '@/lib/methods';
+import { guid } from '@/lib/methods'
 export default {
   name: 'template-table',
   props: {
@@ -49,50 +49,50 @@ export default {
       columns: [],
       columnInfo: {},
       showAddDialog: false
-    };
+    }
   },
   mounted() {
     this.columns.push({
       prop: 'demo',
       label: 'demo列',
       guid: guid()
-    });
+    })
   },
   methods: {
     handleClickEdit(index, del) {
       if (del) {
-        this.columns.splice(index, 1);
+        this.columns.splice(index, 1)
       } else {
         if (index === undefined) {
-          const index = this.columns.length;
-          this.columns.push({ prop: 'new_' + index, label: '新增列_' + index, guid: guid() });
+          const index = this.columns.length
+          this.columns.push({ prop: 'new_' + index, label: '新增列_' + index, guid: guid() })
         } else {
-          this.columnInfo = this.columns[index];
-          this.showAddDialog = true;
+          this.columnInfo = this.columns[index]
+          this.showAddDialog = true
         }
       }
     },
     handleClickDel() {
-      this.$emit('click-del');
+      this.$emit('click-del')
     }
   },
   watch: {
     columns: {
       handler(newValue) {
-        let data = {};
-        let html = '    <el-table :data="tableData_' + this.index + '">\n';
+        let data = {}
+        let html = '    <el-table :data="tableData_' + this.index + '">\n'
         newValue.forEach((val) => {
-          data[val.prop] = val.label + '的数据';
-          html += '      <el-table-column prop="' + val.prop + '" label="' + val.label + '"> </el-table-column>\n';
-        });
-        html += '    </el-table>';
-        this.tableData.splice(0, 1, data);
-        let returnData = {};
-        returnData['tableData_' + this.index] = this.tableData;
-        this.$emit('change', this.index, html, returnData);
+          data[val.prop] = val.label + '的数据'
+          html += '      <el-table-column prop="' + val.prop + '" label="' + val.label + '"> </el-table-column>\n'
+        })
+        html += '    </el-table>'
+        this.tableData.splice(0, 1, data)
+        let returnData = {}
+        returnData['tableData_' + this.index] = this.tableData
+        this.$emit('change', this.index, html, returnData)
       },
       deep: true
     }
   }
-};
+}
 </script>

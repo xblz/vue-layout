@@ -2,7 +2,7 @@
   <div style="display: flex;height:100%">
     <draggable
       :list="templates"
-      :options="{ group: { name: 'templates', pull: 'clone', put: false }, sort: false }"
+      v-bind="{ group: { name: 'templates', pull: 'clone', put: false }, sort: false }"
       :clone="handleCloneTemplate"
       style="height:100%;width: 20%;border: 1px gray solid;padding: 8px;margin-right: 4px;"
     >
@@ -13,7 +13,7 @@
 
     <draggable
       :list="selectTemplates"
-      :options="{ group: 'templates' }"
+      v-bind="{ group: 'templates' }"
       class="dragArea11"
       style="height: 100%;width: 80%;border: 1px gray solid;padding: 8px;margin-left: 4px;"
     >
@@ -40,12 +40,12 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable';
-import components from './components';
-import { guid, getHtml4String } from './lib/methods';
+import draggable from 'vuedraggable'
+import components from './components'
+import { guid, getHtml4String } from './lib/methods'
 
-import JSZip from 'jszip';
-import fileSaver from 'file-saver';
+import JSZip from 'jszip'
+import fileSaver from 'file-saver'
 
 export default {
   components: {
@@ -170,62 +170,57 @@ export default {
           '}\n',
         babel: 'module.exports = {\n' + '  presets: [\n' + "    '@vue/app'\n" + '  ]\n' + '}\n'
       }
-    };
+    }
   },
   created() {
-    this.templates = Object.keys(components).map((component) => {
-      return {
-        id: guid(),
-        name: component
-      };
-    });
+    this.templates = Object.keys(components).map((component) => ({ id: guid(), name: component }))
   },
   watch: {
     selectTemplates: {
       handler(newValue) {
-        this.returnHtml = getHtml4String(newValue);
+        this.returnHtml = getHtml4String(newValue)
       },
       deep: true
     }
   },
   methods: {
     handleCloneTemplate(template) {
-      template = JSON.parse(JSON.stringify(template));
-      template.id = guid();
-      return template;
+      template = JSON.parse(JSON.stringify(template))
+      template.id = guid()
+      return template
     },
     // handleClickDelTemplate(index) {
     //   this.selectTemplates.splice(index, 1);
     // },
     handleClickDelTemplate() {
-      this.downloadZip();
+      this.downloadZip()
     },
     handleChangeTemplate(index, html, data) {
-      this.selectTemplates[index].html = html;
-      this.selectTemplates[index].data = data;
-      this.returnHtml = getHtml4String(this.selectTemplates);
+      this.selectTemplates[index].html = html
+      this.selectTemplates[index].data = data
+      this.returnHtml = getHtml4String(this.selectTemplates)
     },
     downloadZip() {
-      const zip = new JSZip();
+      const zip = new JSZip()
 
       // public
-      zip.file('public/index.html', this.fileContext.public.index);
+      zip.file('public/index.html', this.fileContext.public.index)
 
       // src
-      zip.file('src/components/HelloWorld.vue', this.returnHtml);
-      zip.file('src/App.vue', this.fileContext.src.app);
-      zip.file('src/main.js', this.fileContext.src.main);
+      zip.file('src/components/HelloWorld.vue', this.returnHtml)
+      zip.file('src/App.vue', this.fileContext.src.app)
+      zip.file('src/main.js', this.fileContext.src.main)
 
       // .
-      zip.file('babel.config.js', this.fileContext.babel);
-      zip.file('package.json', this.fileContext.package);
+      zip.file('babel.config.js', this.fileContext.babel)
+      zip.file('package.json', this.fileContext.package)
 
       zip.generateAsync({ type: 'blob' }).then(function(content) {
-        fileSaver.saveAs(content, 'example.zip');
-      });
+        fileSaver.saveAs(content, 'example.zip')
+      })
     }
   }
-};
+}
 </script>
 
 <style lang="scss">
