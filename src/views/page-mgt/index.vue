@@ -20,15 +20,7 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-.aaaaa {
-  .el-tabs__content {
-    height: 100%;
-  }
+.el-tab-pane {
   height: 100%;
-}
-.el-tabs {
-  .el-tabs__content {
-    height: 100%;
-  }
 }
 </style>

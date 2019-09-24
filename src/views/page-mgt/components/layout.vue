@@ -1,7 +1,7 @@
 <template>
   <div class="page-layout">
-    <el-aside class="c-aside">
-      <el-menu class="aside-menu" router unique-opened :collapse-transition="false" :default-active="activeMenuPath">
+    <el-aside>
+      <el-menu router unique-opened :collapse-transition="false" :default-active="activeMenuPath">
         <el-submenu v-show="false" index="/">
           <el-menu-item index="/home"></el-menu-item>
         </el-submenu>
@@ -72,8 +72,11 @@ export default {
 <style scoped lang="scss">
 .page-layout {
   height: 100%;
-  .el-tabs__content {
+  .el-aside {
     height: 100%;
+    .el-menu {
+      height: 100%;
+    }
   }
 }
 </style>
