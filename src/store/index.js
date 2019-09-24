@@ -3,14 +3,14 @@ import Vuex from 'vuex'
 
 import { NAV_MENU } from './mutation-types'
 
-import home from './modules/home.store'
+import project from './modules/project.store'
 import page from './modules/page.store'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
-    home,
+    project,
     page
   },
   state: {

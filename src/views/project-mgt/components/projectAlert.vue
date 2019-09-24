@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       project: {
-        id: '',
+        projectId: '',
         name: ''
       },
       rules: {
@@ -60,7 +60,7 @@ export default {
         if (valid) {
           const { name } = this.project
           this.$emit('handleClick', {
-            id: this.$getGuid(),
+            projectId: this.$getGuid(),
             name
           })
         }

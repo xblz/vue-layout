@@ -6,8 +6,8 @@
           <el-card shadow="hover" class="project-item" @click.native="handleClickDetail(item)">
             <div class="item-name">{{ item.name }}</div>
             <div>
-              <el-button circle type="success" icon="el-icon-download" @click="handleClickDownload(item)"></el-button>
-              <el-button circle type="danger" icon="el-icon-delete" @click="handleClickDel(item)"></el-button>
+              <el-button circle type="success" icon="el-icon-download" @click.stop="handleClickDownload(item)" />
+              <el-button circle type="danger" icon="el-icon-delete" @click.stop="handleClickDel(item)" />
             </div>
           </el-card>
         </el-col>
@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     ...mapState({
-      projectList: (state) => state.home.projectList
+      projectList: (state) => state.project.projectList
     })
   },
   methods: {
@@ -43,7 +43,7 @@ export default {
       console.log(project)
     },
     handleClickDetail(project) {
-      this.$router.push({ path: '/page', query: { projectId: project.id } })
+      this.$router.push({ path: '/page', query: { projectId: project.projectId } })
     },
     handleClickDel(project) {
       this.$alert(`确认删除项目（${project.name}）?`, '提示', {

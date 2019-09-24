@@ -8,6 +8,7 @@
 <script>
 import basic from './components/basic'
 import layout from './components/layout'
+
 export default {
   name: 'index',
   components: { basic, layout },
@@ -18,5 +19,16 @@ export default {
   }
 }
 </script>
-
-<style scoped></style>
+<style scoped lang="scss">
+.aaaaa {
+  .el-tabs__content {
+    height: 100%;
+  }
+  height: 100%;
+}
+.el-tabs {
+  .el-tabs__content {
+    height: 100%;
+  }
+}
+</style>

@@ -11,7 +11,6 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-  name: 'NavMenu',
   data() {
     return {
       projectId: this.$route.query.projectId

@@ -15,7 +15,10 @@ const actions = {
     state.projectList = $getLocalStorage(PROJECT_LIST) || []
   },
   addProject({ commit }, payload) {
-    commit(PROJECT_ADD, { ...payload, pages: [{ id: $getGuid(), name: 'default' }] })
+    commit(PROJECT_ADD, {
+      ...payload,
+      pages: [{ pageId: $getGuid(), name: 'home', path: 'home', isMenu: true, children: [] }]
+    })
   },
   delProject({ commit }, payload) {
     commit(PROJECT_DEL, payload)
@@ -32,7 +35,7 @@ const mutations = {
   },
   [PROJECT_DEL](state, payload) {
     const list = $getLocalStorage(PROJECT_LIST) || []
-    const projectList = list.filter((item) => item.id !== payload.id)
+    const projectList = list.filter((item) => item.projectId !== payload.projectId)
     $setLocalStorage(PROJECT_LIST, projectList)
     state.projectList = projectList
   }
