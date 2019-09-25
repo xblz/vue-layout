@@ -114,6 +114,53 @@ const $getGuid = () => {
   return S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4()
 }
 
+const $getHtml4String = (val) => {
+  let html = ''
+  let obj = {}
+  let json = ''
+  if (val.length) {
+    val.forEach((data, index) => {
+      html += (index === 0 ? '' : '\n') + data.html
+      Object.assign(obj, data.data)
+    })
+
+    const arr = JSON.stringify(obj, null, 2).split('\n')
+
+    arr.forEach(function(v, i) {
+      const a = v.split(':')
+
+      if (a.length === 1) {
+        if (i !== 0) {
+          json += '    '
+        }
+        json += v + '\n'
+      } else {
+        json += `    ${(a[0] || '').replace(/"/g, '')}:${(a[1] || '').replace(/"/g, "'")}\n`
+      }
+    })
+  }
+  const returnHtml =
+    '<template>\n' +
+    (val.length <= 1 ? '' : '  <div>\n') +
+    html +
+    '\n' +
+    (val.length <= 1 ? '' : '  </div>\n') +
+    '</template>\n' +
+    '<script>\n' +
+    'export default {\n' +
+    '  data() {\n' +
+    '    return ' +
+    json +
+    '  }\n' +
+    '};\n' +
+    '<' +
+    '/script>\n' +
+    '<style scoped lang="scss">\n' +
+    '</style>'
+
+  return returnHtml
+}
+
 export {
   $setLocalStorage,
   $getLocalStorage,
@@ -124,5 +171,6 @@ export {
   $formatDate,
   $picMiniUrl,
   $showNotify,
-  $getGuid
+  $getGuid,
+  $getHtml4String
 }

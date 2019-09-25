@@ -47,12 +47,50 @@ const mutations = {
               delete payload.data.pageId
               delete payload.data.children
               payload.data.childrenId = $getGuid()
+              payload.data.layout = {
+                template: [],
+                html:
+                  '<template>\n' +
+                  '\n' +
+                  '</template>\n' +
+                  '<script>\n' +
+                  'export default {\n' +
+                  '  data() {\n' +
+                  '    return   }\n' +
+                  '};\n' +
+                  '</script>\n' +
+                  '<style lang="scss" scoped>\n' +
+                  '</style>'
+              }
               page.children.push(payload.data)
             }
             return page
           })
         } else {
-          project.pages.push(Object.assign({ children: [], pageId: $getGuid() }, payload.data))
+          project.pages.push(
+            Object.assign(
+              {
+                pageId: $getGuid(),
+                children: [],
+                layout: {
+                  template: [],
+                  html:
+                    '<template>\n' +
+                    '\n' +
+                    '</template>\n' +
+                    '<script>\n' +
+                    'export default {\n' +
+                    '  data() {\n' +
+                    '    return   }\n' +
+                    '};\n' +
+                    '</script>\n' +
+                    '<style lang="scss" scoped>\n' +
+                    '</style>'
+                }
+              },
+              payload.data
+            )
+          )
         }
       }
       return project

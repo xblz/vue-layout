@@ -2,9 +2,6 @@
   <div class="page-layout">
     <el-aside>
       <el-menu router unique-opened :collapse-transition="false" :default-active="activeMenuPath">
-        <el-submenu v-show="false" index="/">
-          <el-menu-item index="/home"></el-menu-item>
-        </el-submenu>
         <template v-for="(menu, index) in project.pages">
           <el-submenu :key="index" v-if="menu.isMenu && menu.children.length" :index="menu.path">
             <template slot="title">
@@ -14,7 +11,7 @@
               <el-menu-item
                 v-if="childrenMenu.isMenu"
                 :key="childrenIndex"
-                :index="`${menu.path}/${childrenMenu.path}`"
+                @click="handleClickMenu(index, childrenIndex)"
               >
                 <template slot="title">
                   <span>{{ childrenMenu.name }}</span>
@@ -22,21 +19,59 @@
               </el-menu-item>
             </template>
           </el-submenu>
-          <el-menu-item :key="index" v-else-if="menu.isMenu" :index="menu.path">
+          <el-menu-item :key="index" v-else-if="menu.isMenu" @click="handleClickMenu(index)">
             {{ menu.name }}
           </el-menu-item>
         </template>
       </el-menu>
     </el-aside>
+    <draggable
+      :list="selectTemplates"
+      v-bind="{ group: 'templates' }"
+      class="dragArea11"
+      style="height: 100%;flex: 1;border: 1px gray solid;padding: 8px;margin-left: 4px;width: 100px;"
+    >
+      <div v-for="(component, index) in selectTemplates" :key="component.id">
+        <template v-if="component.name === 'template-table'">
+          <template-table
+            :index="index"
+            :data="selectTemplates[index].data[`data_${index}`]"
+            :config="selectTemplates[index].config[`config_${index}`]"
+            @click-del="handleClickDelTemplate"
+            @change="handleChangeTemplate"
+            style="width: 100%;"
+          ></template-table>
+        </template>
+      </div>
+    </draggable>
+    <draggable
+      :list="templates"
+      v-bind="{ group: { name: 'templates', pull: 'clone', put: false }, sort: false }"
+      :clone="handleCloneTemplate"
+      style="height:100%;width: 200px;border: 1px gray solid;padding: 8px;margin-right: 4px;"
+    >
+      <div v-for="template in templates" :key="template.id">
+        <div>{{ template.name }}</div>
+      </div>
+    </draggable>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import draggable from 'vuedraggable'
+import components from '@/components'
 
 export default {
   name: 'layout',
+  components: { draggable, ...components },
   created() {
+    this.templates = Object.keys(components).map((component) => ({
+      id: this.$getGuid(),
+      name: component,
+      data: {},
+      config: {}
+    }))
     this.getProjectInfo({ projectId: this.$route.query.projectId })
   },
   computed: {
@@ -44,15 +79,55 @@ export default {
       project: (state) => state.page.projectInfo
     })
   },
+  watch: {
+    selectTemplates: {
+      handler(newValue) {
+        this.returnHtml = this.$getHtml4String(newValue)
+        this.updateProjectInfo(newValue, this.returnHtml)
+      },
+      deep: true
+    }
+  },
   methods: {
     ...mapActions(['getProjectInfo', 'updateProject']),
-    handleClickSubmit() {
-      this.$refs['project'].validate((valid) => {
-        if (valid) {
-          this.updateProject(this.project)
-          this.$showNotify('修改成功')
-        }
-      })
+    handleClickMenu(index, childrenIndex) {
+      this.layout.index = index
+      this.layout.childrenIndex = null
+      this.selectTemplates = this.project.pages[index].layout.template
+      this.returnHtml = this.project.pages[index].layout.html
+
+      if (typeof childrenIndex !== 'undefined') {
+        this.layout.childrenIndex = childrenIndex
+        this.selectTemplates = this.project.pages[index].children[childrenIndex].layout.template
+        this.returnHtml = this.project.pages[index].children[childrenIndex].layout.html
+      }
+    },
+    handleCloneTemplate(template) {
+      template = JSON.parse(JSON.stringify(template))
+      template.id = this.$getGuid()
+      return template
+    },
+    handleClickDelTemplate(index) {
+      this.selectTemplates.splice(index, 1)
+    },
+    handleChangeTemplate({ index, html, data, config }) {
+      this.selectTemplates[index].html = html
+      this.selectTemplates[index].data = data
+      this.selectTemplates[index].config = config
+      this.returnHtml = this.$getHtml4String(this.selectTemplates)
+
+      this.updateProjectInfo(this.selectTemplates, this.returnHtml)
+    },
+    updateProjectInfo(template, html) {
+      debugger
+      if (this.layout.childrenIndex) {
+        this.project.pages[this.layout.index].children[this.layout.childrenIndex].layout.template = template
+        this.project.pages[this.layout.index].children[this.layout.childrenIndex].layout.html = html
+      } else {
+        this.project.pages[this.layout.index].layout.template = template
+        this.project.pages[this.layout.index].layout.html = html
+      }
+      this.updateProject(this.project)
     }
   },
   data() {
@@ -63,7 +138,14 @@ export default {
           { pattern: /^(\w|-){4,20}$/, message: '项目名必须在4~20个字母之间,特殊符号仅支持"-""_"', trigger: 'blur' }
         ]
       },
-      activeMenuPath: ''
+      activeMenuPath: '',
+      templates: [], // 模板库列表
+      selectTemplates: [],
+      returnHtml: '',
+      layout: {
+        index: null,
+        childrenIndex: null
+      }
     }
   }
 }
@@ -72,8 +154,10 @@ export default {
 <style scoped lang="scss">
 .page-layout {
   height: 100%;
+  display: flex;
   .el-aside {
     height: 100%;
+    width: 200px !important;
     .el-menu {
       height: 100%;
     }

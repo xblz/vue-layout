@@ -17,7 +17,30 @@ const actions = {
   addProject({ commit }, payload) {
     commit(PROJECT_ADD, {
       ...payload,
-      pages: [{ pageId: $getGuid(), name: 'home', path: 'home', isMenu: true, children: [] }]
+      pages: [
+        {
+          pageId: $getGuid(),
+          name: 'home',
+          path: 'home',
+          isMenu: true,
+          children: [],
+          layout: {
+            template: [],
+            html:
+              '<template>\n' +
+              '\n' +
+              '</template>\n' +
+              '<script>\n' +
+              'export default {\n' +
+              '  data() {\n' +
+              '    return   }\n' +
+              '};\n' +
+              '</script>\n' +
+              '<style lang="scss" scoped>\n' +
+              '</style>'
+          }
+        }
+      ]
     })
   },
   delProject({ commit }, payload) {
