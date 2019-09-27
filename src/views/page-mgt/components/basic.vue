@@ -47,6 +47,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import { showNotify } from '../../../utils/commonUtil'
 
 import menuAlert from './menuAlert'
 
@@ -102,7 +103,7 @@ export default {
       this.menu.show = false
       this.menu.data = null
       this.menu.updateNode = null
-      this.$showNotify(message)
+      showNotify(message)
       this.getProjectInfo({ projectId: this.$route.query.projectId })
     }
   },

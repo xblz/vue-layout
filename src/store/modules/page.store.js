@@ -1,6 +1,7 @@
-import { PROJECT_UPDATE, PROJECT_ADD_MENU, PROJECT_UPDATE_MENU } from '../mutation-types'
-import { $getGuid, $getLocalStorage, $setLocalStorage } from '../../lib/methods'
 import { PROJECT_LIST } from '../../lib/constant'
+import { PROJECT_UPDATE, PROJECT_ADD_MENU, PROJECT_UPDATE_MENU } from '../mutation-types'
+import { getEmptyHtml } from '../../utils/fileStringUtil'
+import { getGuid, getLocalStorage, setLocalStorage } from '../../utils/commonUtil'
 
 const state = {
   projectInfo: {}
@@ -13,7 +14,7 @@ const getters = {}
 const actions = {
   /** 获取项目信息 **/
   getProjectInfo({ state }, payload) {
-    const projectList = $getLocalStorage(PROJECT_LIST) || []
+    const projectList = getLocalStorage(PROJECT_LIST) || []
     state.projectInfo = projectList.filter((project) => project.projectId === payload.projectId)[0]
   },
   /** 编辑项目基础信息 **/
@@ -33,12 +34,12 @@ const actions = {
 // mutations
 const mutations = {
   [PROJECT_UPDATE](state, payload) {
-    let projectList = $getLocalStorage(PROJECT_LIST) || []
+    let projectList = getLocalStorage(PROJECT_LIST) || []
     projectList = projectList.map((project) => (project.projectId === payload.projectId ? payload : project))
-    $setLocalStorage(PROJECT_LIST, projectList)
+    setLocalStorage(PROJECT_LIST, projectList)
   },
   [PROJECT_ADD_MENU](state, payload) {
-    let projectList = $getLocalStorage(PROJECT_LIST) || []
+    let projectList = getLocalStorage(PROJECT_LIST) || []
     projectList = projectList.map((project) => {
       if (project.projectId === payload.projectId) {
         if (payload.pageId) {
@@ -46,21 +47,10 @@ const mutations = {
             if (page.pageId === payload.pageId) {
               delete payload.data.pageId
               delete payload.data.children
-              payload.data.childrenId = $getGuid()
+              payload.data.childrenId = getGuid()
               payload.data.layout = {
                 template: [],
-                html:
-                  '<template>\n' +
-                  '\n' +
-                  '</template>\n' +
-                  '<script>\n' +
-                  'export default {\n' +
-                  '  data() {\n' +
-                  '    return   }\n' +
-                  '};\n' +
-                  '</script>\n' +
-                  '<style lang="scss" scoped>\n' +
-                  '</style>'
+                html: getEmptyHtml()
               }
               page.children.push(payload.data)
             }
@@ -70,22 +60,11 @@ const mutations = {
           project.pages.push(
             Object.assign(
               {
-                pageId: $getGuid(),
+                pageId: getGuid(),
                 children: [],
                 layout: {
                   template: [],
-                  html:
-                    '<template>\n' +
-                    '\n' +
-                    '</template>\n' +
-                    '<script>\n' +
-                    'export default {\n' +
-                    '  data() {\n' +
-                    '    return   }\n' +
-                    '};\n' +
-                    '</script>\n' +
-                    '<style lang="scss" scoped>\n' +
-                    '</style>'
+                  html: getEmptyHtml()
                 }
               },
               payload.data
@@ -95,10 +74,10 @@ const mutations = {
       }
       return project
     })
-    $setLocalStorage(PROJECT_LIST, projectList)
+    setLocalStorage(PROJECT_LIST, projectList)
   },
   [PROJECT_UPDATE_MENU](state, payload) {
-    let projectList = $getLocalStorage(PROJECT_LIST) || []
+    let projectList = getLocalStorage(PROJECT_LIST) || []
     projectList = projectList.map((project) => {
       if (project.projectId === payload.projectId) {
         if (payload.childrenId) {
@@ -116,7 +95,7 @@ const mutations = {
       }
       return project
     })
-    $setLocalStorage(PROJECT_LIST, projectList)
+    setLocalStorage(PROJECT_LIST, projectList)
   }
 }
 

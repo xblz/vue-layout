@@ -1,6 +1,7 @@
-import { PROJECT_ADD, PROJECT_DEL } from '../mutation-types'
-import { $getLocalStorage, $setLocalStorage, $getGuid } from '../../lib/methods'
 import { PROJECT_LIST } from '../../lib/constant'
+import { PROJECT_ADD, PROJECT_DEL } from '../mutation-types'
+import { getGuid, getLocalStorage, setLocalStorage } from '../../utils/commonUtil'
+import { getEmptyHtml } from '../../utils/fileStringUtil'
 
 const state = {
   projectList: []
@@ -11,38 +12,30 @@ const getters = {}
 
 // actions
 const actions = {
+  /** 获取项目列表 **/
   getProjectList({ state }) {
-    state.projectList = $getLocalStorage(PROJECT_LIST) || []
+    state.projectList = getLocalStorage(PROJECT_LIST) || []
   },
+  /** 添加项目 **/
   addProject({ commit }, payload) {
     commit(PROJECT_ADD, {
       ...payload,
       pages: [
         {
-          pageId: $getGuid(),
+          pageId: getGuid(),
           name: 'home',
           path: 'home',
           isMenu: true,
           children: [],
           layout: {
             template: [],
-            html:
-              '<template>\n' +
-              '\n' +
-              '</template>\n' +
-              '<script>\n' +
-              'export default {\n' +
-              '  data() {\n' +
-              '    return   }\n' +
-              '};\n' +
-              '</script>\n' +
-              '<style lang="scss" scoped>\n' +
-              '</style>'
+            html: getEmptyHtml()
           }
         }
       ]
     })
   },
+  /** 删除项目 **/
   delProject({ commit }, payload) {
     commit(PROJECT_DEL, payload)
   }
@@ -51,15 +44,15 @@ const actions = {
 // mutations
 const mutations = {
   [PROJECT_ADD](state, payload) {
-    const list = $getLocalStorage(PROJECT_LIST) || []
+    const list = getLocalStorage(PROJECT_LIST) || []
     const projectList = [...list, payload]
-    $setLocalStorage(PROJECT_LIST, projectList)
+    setLocalStorage(PROJECT_LIST, projectList)
     state.projectList = projectList
   },
   [PROJECT_DEL](state, payload) {
-    const list = $getLocalStorage(PROJECT_LIST) || []
+    const list = getLocalStorage(PROJECT_LIST) || []
     const projectList = list.filter((item) => item.projectId !== payload.projectId)
-    $setLocalStorage(PROJECT_LIST, projectList)
+    setLocalStorage(PROJECT_LIST, projectList)
     state.projectList = projectList
   }
 }

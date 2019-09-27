@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import { getGuid } from '../../../utils/commonUtil'
+
 export default {
   props: {
     show: Boolean
@@ -60,7 +62,7 @@ export default {
         if (valid) {
           const { name } = this.project
           this.$emit('handleClick', {
-            projectId: this.$getGuid(),
+            projectId: getGuid(),
             name
           })
         }

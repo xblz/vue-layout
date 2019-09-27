@@ -1,20 +1,24 @@
 <template>
   <div style="display: flex">
-    <el-table :data="tableData">
+    <el-table :data="tableData" border>
       <el-table-column v-for="column in columns" v-bind:key="column.guid" :prop="column.prop">
         <template slot="header" slot-scope="scope">
           <span>{{ column.label }}</span>
-          <i class="el-icon-setting" style="padding: 0 8px;cursor: pointer;" @click="handleClickEdit(scope.$index)"></i>
+          <i
+            class="el-icon-setting"
+            style="padding: 0 8px;cursor: pointer;"
+            @click="handleClickEditCol(scope.$index)"
+          ></i>
           <i
             class="el-icon-delete"
             style="color: red;padding: 0 8px 0 0;cursor: pointer;"
-            @click="handleClickEdit(scope.$index, true)"
+            @click="handleClickDelCol(scope.$index)"
           ></i>
         </template>
       </el-table-column>
       <el-table-column width="100px">
         <template slot="header">
-          <i class="el-icon-plus" @click="handleClickEdit()">添加列</i>
+          <i class="el-icon-plus" @click="handleClickAddCol()">添加列</i>
         </template>
       </el-table-column>
     </el-table>
@@ -37,6 +41,8 @@
 </template>
 
 <script>
+import { getGuid } from '../../utils/commonUtil'
+
 export default {
   name: 'template-table',
   props: {
@@ -62,23 +68,21 @@ export default {
       this.columns.push({
         prop: 'demo',
         label: 'demo列',
-        guid: this.$getGuid()
+        guid: getGuid()
       })
     }
   },
   methods: {
-    handleClickEdit(index, del) {
-      if (del) {
-        this.columns.splice(index, 1)
-      } else {
-        if (index === undefined) {
-          const index = this.columns.length
-          this.columns.push({ prop: `new_${index}`, label: `新增列_${index}`, guid: this.$getGuid() })
-        } else {
-          this.columnInfo = this.columns[index]
-          this.showAddDialog = true
-        }
-      }
+    handleClickAddCol() {
+      const index = this.columns.length
+      this.columns.push({ prop: `new_${index}`, label: `新增列_${index}`, guid: getGuid() })
+    },
+    handleClickEditCol(index) {
+      this.columnInfo = this.columns[index]
+      this.showAddDialog = true
+    },
+    handleClickDelCol(index) {
+      this.columns.splice(index, 1)
     },
     handleClickDel() {
       this.$emit('click-del')
@@ -88,10 +92,11 @@ export default {
     columns: {
       handler(newValue) {
         let data = {}
-        let html = `    <el-table :data="data_${this.index}">\n`
+        let html = `    <el-table :data="data_${this.index}" border>\n`
+        html += '      <el-table-column type="index" align="center" label="序号" />'
         newValue.forEach((val) => {
           data[val.prop] = val.label + '的数据'
-          html += `      <el-table-column prop="${val.prop}" label="${val.label}"> </el-table-column>\n`
+          html += `      <el-table-column prop="${val.prop}" label="${val.label}" />\n`
         })
         html += '    </el-table>'
         this.tableData.splice(0, 1, data)

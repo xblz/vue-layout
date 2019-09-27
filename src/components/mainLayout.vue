@@ -9,17 +9,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      projectId: this.$route.query.projectId
+      projectId: this.$route.query.projectId,
+      activeMenuPath: window.location.pathname
     }
-  },
-  computed: {
-    ...mapState({
-      activeMenuPath: (state) => state.activeMenuPath
-    })
   }
 }
 </script>

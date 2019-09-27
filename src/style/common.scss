@@ -9,6 +9,11 @@ body {
   border: 0;
   padding: 0;
 }
+.content{
+  height: 100%;
+  position: relative;
+  padding: 20px;
+}
 .el-table th.is-leaf {
   background: #f5f7fa;
 }

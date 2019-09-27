@@ -1,8 +1,10 @@
-// 导航菜单
-export const NAV_MENU = 'NAV_MENU'
-// 项目管理
+/** 项目管理 - 添加项目 **/
 export const PROJECT_ADD = 'PROJECT_ADD'
+/** 项目管理 - 删除项目 **/
 export const PROJECT_DEL = 'PROJECT_DEL'
+/** 项目管理 - 修改项目 **/
 export const PROJECT_UPDATE = 'PROJECT_UPDATE'
+/** 项目管理 - 添加项目菜单 **/
 export const PROJECT_ADD_MENU = 'PROJECT_ADD_MENU'
+/** 项目管理 - 修改项目菜单 **/
 export const PROJECT_UPDATE_MENU = 'PROJECT_UPDATE_MENU'

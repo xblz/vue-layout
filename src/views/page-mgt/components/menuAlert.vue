@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { $deepcopy } from '../../../lib/methods'
+import { deepCopy } from '../../../utils/commonUtil'
 
 export default {
   props: {
@@ -57,7 +57,7 @@ export default {
   methods: {
     open() {
       if (this.data) {
-        this.menu = $deepcopy(this.data)
+        this.menu = deepCopy(this.data)
       }
     },
     close() {

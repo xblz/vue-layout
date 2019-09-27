@@ -1,30 +1,35 @@
 <template>
   <div class="page-layout">
-    <el-aside>
-      <el-menu router unique-opened :collapse-transition="false" :default-active="activeMenuPath">
-        <template v-for="(menu, index) in project.pages">
-          <el-submenu :key="index" v-if="menu.isMenu && menu.children.length" :index="menu.path">
-            <template slot="title">
-              <span>{{ menu.name }}</span>
-            </template>
-            <template v-for="(childrenMenu, childrenIndex) in menu.children">
-              <el-menu-item
-                v-if="childrenMenu.isMenu"
-                :key="childrenIndex"
-                @click="handleClickMenu(index, childrenIndex)"
-              >
-                <template slot="title">
-                  <span>{{ childrenMenu.name }}</span>
-                </template>
-              </el-menu-item>
-            </template>
-          </el-submenu>
-          <el-menu-item :key="index" v-else-if="menu.isMenu" @click="handleClickMenu(index)">
-            {{ menu.name }}
-          </el-menu-item>
-        </template>
-      </el-menu>
-    </el-aside>
+    <el-menu
+      unique-opened
+      background-color="#001529"
+      text-color="#cfcfcf"
+      active-text-color="#409EFF"
+      :collapse-transition="false"
+    >
+      <template v-for="(menu, index) in project.pages">
+        <el-submenu :key="index" v-if="menu.isMenu && menu.children.length" :index="`/${menu.path}`">
+          <template slot="title">
+            <span>{{ menu.name }}</span>
+          </template>
+          <template v-for="(childrenMenu, childrenIndex) in menu.children">
+            <el-menu-item
+              v-if="childrenMenu.isMenu"
+              :key="childrenIndex"
+              :index="`${menu.path}/${childrenMenu.path}`"
+              @click="handleClickMenu(index, childrenIndex)"
+            >
+              <template slot="title">
+                <span>{{ childrenMenu.name }}</span>
+              </template>
+            </el-menu-item>
+          </template>
+        </el-submenu>
+        <el-menu-item :key="index" v-else-if="menu.isMenu" :index="`/${menu.path}`" @click="handleClickMenu(index)">
+          {{ menu.name }}
+        </el-menu-item>
+      </template>
+    </el-menu>
     <draggable
       :list="selectTemplates"
       v-bind="{ group: 'templates' }"
@@ -44,16 +49,19 @@
         </template>
       </div>
     </draggable>
-    <draggable
-      :list="templates"
-      v-bind="{ group: { name: 'templates', pull: 'clone', put: false }, sort: false }"
-      :clone="handleCloneTemplate"
-      style="height:100%;width: 200px;border: 1px gray solid;padding: 8px;margin-right: 4px;"
-    >
-      <div v-for="template in templates" :key="template.id">
-        <div>{{ template.name }}</div>
-      </div>
-    </draggable>
+    <div>
+      组件库
+      <draggable
+        :list="templates"
+        v-bind="{ group: { name: 'templates', pull: 'clone', put: false }, sort: false }"
+        :clone="handleCloneTemplate"
+        style="height:100%;width: 200px;border: 1px gray solid;padding: 8px;margin-right: 4px;"
+      >
+        <div v-for="template in templates" :key="template.id">
+          <div>{{ template.name }}</div>
+        </div>
+      </draggable>
+    </div>
   </div>
 </template>
 
@@ -61,13 +69,14 @@
 import { mapActions, mapState } from 'vuex'
 import draggable from 'vuedraggable'
 import components from '@/components'
+import { getGuid, getHtml4String } from '../../../utils/commonUtil'
 
 export default {
   name: 'layout',
   components: { draggable, ...components },
   created() {
     this.templates = Object.keys(components).map((component) => ({
-      id: this.$getGuid(),
+      id: getGuid(),
       name: component,
       data: {},
       config: {}
@@ -82,7 +91,7 @@ export default {
   watch: {
     selectTemplates: {
       handler(newValue) {
-        this.returnHtml = this.$getHtml4String(newValue)
+        this.returnHtml = getHtml4String(newValue)
         this.updateProjectInfo(newValue, this.returnHtml)
       },
       deep: true
@@ -92,7 +101,7 @@ export default {
     ...mapActions(['getProjectInfo', 'updateProject']),
     handleClickMenu(index, childrenIndex) {
       this.layout.index = index
-      this.layout.childrenIndex = null
+      this.layout.childrenIndex = -1
       this.selectTemplates = this.project.pages[index].layout.template
       this.returnHtml = this.project.pages[index].layout.html
 
@@ -104,7 +113,7 @@ export default {
     },
     handleCloneTemplate(template) {
       template = JSON.parse(JSON.stringify(template))
-      template.id = this.$getGuid()
+      template.id = getGuid()
       return template
     },
     handleClickDelTemplate(index) {
@@ -114,13 +123,12 @@ export default {
       this.selectTemplates[index].html = html
       this.selectTemplates[index].data = data
       this.selectTemplates[index].config = config
-      this.returnHtml = this.$getHtml4String(this.selectTemplates)
+      this.returnHtml = getHtml4String(this.selectTemplates)
 
       this.updateProjectInfo(this.selectTemplates, this.returnHtml)
     },
     updateProjectInfo(template, html) {
-      debugger
-      if (this.layout.childrenIndex) {
+      if (this.layout.childrenIndex !== -1) {
         this.project.pages[this.layout.index].children[this.layout.childrenIndex].layout.template = template
         this.project.pages[this.layout.index].children[this.layout.childrenIndex].layout.html = html
       } else {
@@ -138,13 +146,12 @@ export default {
           { pattern: /^(\w|-){4,20}$/, message: '项目名必须在4~20个字母之间,特殊符号仅支持"-""_"', trigger: 'blur' }
         ]
       },
-      activeMenuPath: '',
       templates: [], // 模板库列表
       selectTemplates: [],
       returnHtml: '',
       layout: {
         index: null,
-        childrenIndex: null
+        childrenIndex: -1
       }
     }
   }
@@ -155,12 +162,10 @@ export default {
 .page-layout {
   height: 100%;
   display: flex;
-  .el-aside {
+
+  .el-menu {
     height: 100%;
     width: 200px !important;
-    .el-menu {
-      height: 100%;
-    }
   }
 }
 </style>
