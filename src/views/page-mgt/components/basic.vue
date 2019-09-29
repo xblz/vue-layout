@@ -6,7 +6,7 @@
       :rules="rules"
       :model="project"
       @submit.native.prevent
-      label-width="100px"
+      label-width="120px"
     >
       <el-row>
         <el-col :span="10">
@@ -16,6 +16,19 @@
               placeholder="支持字母/数字，特殊符号仅支持 _ -"
               minlength="4"
               maxlength="20"
+              clearable
+              @blur="handleClickSubmit"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="10">
+          <el-form-item label="开发环境接口地址" prop="devPath">
+            <el-input
+              v-model="project.devPath"
+              placeholder="开发api访问地址"
+              maxlength="80"
               clearable
               @blur="handleClickSubmit"
             ></el-input>
@@ -113,6 +126,13 @@ export default {
         name: [
           { required: true, message: '项目名不能为空', trigger: 'blur' },
           { pattern: /^(\w|-){4,20}$/, message: '项目名必须在4~20个字母之间,特殊符号仅支持"-""_"', trigger: 'blur' }
+        ],
+        devPath: [
+          {
+            pattern: /(http|https):\/\/([\w.]+\/?)\S*/,
+            message: '必须以http,https开头,检查格式是否正确',
+            trigger: 'blur'
+          }
         ]
       },
       menu: {

@@ -42,7 +42,7 @@
             :index="index"
             :data="selectTemplates[index].data[`data_${index}`]"
             :config="selectTemplates[index].config[`config_${index}`]"
-            @click-del="handleClickDelTemplate"
+            @click-del="handleClickDelTemplate(index)"
             @change="handleChangeTemplate"
             style="width: 100%;"
           ></template-table>

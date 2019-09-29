@@ -1,24 +1,30 @@
-import styleSass from '../lib/styleSass'
-import viewLayout from '../lib/viewLayout'
-import router from '../lib/router'
+import styleSass from '../lib/fileTemplate/styleSass'
+import viewLayout from '../lib/fileTemplate/viewLayout'
+import router from '../lib/fileTemplate/router'
+import publicIndex from '../lib/fileTemplate/publicIndex'
+import babelConfig from '../lib/fileTemplate/babelConfig'
+import packages from '../lib/fileTemplate/package'
+import app from '../lib/fileTemplate/app'
+import main from '../lib/fileTemplate/main'
+import emptyHtml from '../lib/fileTemplate/emptyHtml'
+import vueConfig from '../lib/fileTemplate/vueConfig'
+import http from '../lib/fileTemplate/http'
+import utilsCommon from '../lib/fileTemplate/utilsCommon'
 
-export const getEmptyHtml = () =>
-  '<template>\n' +
-  '\n' +
-  '</template>\n' +
-  '<script>\n' +
-  'export default {\n' +
-  '  data() {\n' +
-  '    return {}\n' +
-  '  }\n' +
-  '}\n' +
-  '</script>\n' +
-  '<style scoped lang="scss">\n' +
-  '</style>'
+export const getEmptyHtml = () => emptyHtml
 
 export const getStyleSass = () => styleSass
+export const getPublicIndex = () => publicIndex
+export const getBabelConfig = () => babelConfig
+export const getPackage = () => packages
+export const getApp = () => app
+export const getMain = () => main
+export const getVueConfig = (devPath) => vueConfig.replace('${{devPath}}', devPath)
 
 export const getViewLayout = (str) => viewLayout.replace('${{viewLayout}}', str)
+
+export const getHttp = () => http
+export const getUtilsCommon = () => utilsCommon
 
 export const getRouter = (importsStr, routesStr) =>
   router.replace('${{imports}}', importsStr).replace('${{routes}}', routesStr)

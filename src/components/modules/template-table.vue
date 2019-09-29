@@ -93,7 +93,7 @@ export default {
       handler(newValue) {
         let data = {}
         let html = `    <el-table :data="data_${this.index}" border>\n`
-        html += '      <el-table-column type="index" align="center" label="序号" />'
+        html += '      <el-table-column type="index" align="center" label="序号" />\n'
         newValue.forEach((val) => {
           data[val.prop] = val.label + '的数据'
           html += `      <el-table-column prop="${val.prop}" label="${val.label}" />\n`
