@@ -23,6 +23,7 @@ export default '' +
   '    "@vue/cli-plugin-eslint": "^3.11.0",\n' +
   '    "@vue/cli-service": "^3.11.0",\n' +
   '    "babel-eslint": "^10.0.1",\n' +
+  '    "babel-plugin-component": "^1.1.1",\n' +
   '    "node-sass": "^4.9.0",\n' +
   '    "sass-loader": "^7.1.0",\n' +
   '    "eslint": "^5.16.0",\n' +

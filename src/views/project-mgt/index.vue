@@ -34,6 +34,7 @@ import projectAlert from './components/projectAlert'
 import {
   getApp,
   getBabelConfig,
+  getCommonRouter,
   getHttp,
   getMain,
   getPackage,
@@ -41,12 +42,15 @@ import {
   getRouter,
   getStyleSass,
   getUtilsCommon,
+  getView404,
   getViewLayout,
+  getViewLogin,
   getVueConfig
 } from '../../utils/fileStringUtil'
 import {
   PATH_APP,
   PATH_BABEL,
+  PATH_COMMON_ROUTER,
   PATH_COMPONENT_LAYOUT,
   PATH_LIB_HTTP,
   PATH_MAIN,
@@ -54,6 +58,8 @@ import {
   PATH_PUBLIC_INDEX,
   PATH_STYLE_SCSS,
   PATH_UTIL_COMMON,
+  PATH_VIEW_404,
+  PATH_VIEW_LOGIN,
   PATH_VUE_CONFIG
 } from '../../lib/constant'
 
@@ -77,10 +83,8 @@ export default {
       let viewLayoutStr = ''
 
       //
-      let importRouter = ''
-
-      //
-      let routes = []
+      let importRouter = `import commonRouter from './modules/common.router'\n`
+      let routes = ['...commonRouter']
 
       //
       let routerModules = ''
@@ -92,30 +96,15 @@ export default {
 
         routes.push(`${page.path}Router`)
 
-        zip.file('src/router/index.js', getRouter(importRouter, routes))
+        zip.file('src/router/index.js', getRouter(importRouter, routes.join(', ')))
 
         let tempViewLayoutStr = '' // 拼接页面模版Str
         if (page.children.length) {
-          if (page.isMenu) {
-            tempViewLayoutStr =
-              `        <el-submenu index="/${page.path}">\n` +
-              '          <template slot="title">\n' +
-              `            <span>${page.name}</span>\n` +
-              '          </template>\n'
-            page.children.forEach((children) => {
-              zip.file(`src/views/${page.path}/children/${children.path}.vue`, children.layout.html)
-
-              if (children.isMenu) {
-                tempViewLayoutStr +=
-                  `          <el-menu-item index="/${page.path}/${children.path}">\n` +
-                  '            <template slot="title">\n' +
-                  `              <span>${children.name}</span>\n` +
-                  '            </template>\n' +
-                  '          </el-menu-item>\n'
-              }
-            })
-            tempViewLayoutStr += '        </el-submenu>\n'
-          }
+          tempViewLayoutStr =
+            `        <el-submenu index="/${page.path}" :v-show="${page.isMenu}">\n` +
+            '          <template slot="title">\n' +
+            `            <span>${page.name}</span>\n` +
+            '          </template>\n'
 
           routerModules =
             'export default {\n' +
@@ -123,26 +112,47 @@ export default {
             `  meta: { title: '${page.name}' },\n` +
             "  component: () => import('../../components/layout'),\n" +
             `  redirect: { name: '${page.path}_${page.children[0].path}' },\n` +
+            '  children: [\n'
+
+          page.children.forEach((children, index) => {
+            zip.file(`src/views/${page.path}/children/${children.path}.vue`, children.layout.html)
+
+            tempViewLayoutStr +=
+              `          <el-menu-item index="/${page.path}/${children.path}" :v-show="${children.isMenu}">\n` +
+              '            <template slot="title">\n' +
+              `              <span>${children.name}</span>\n` +
+              '            </template>\n' +
+              '          </el-menu-item>\n'
+
+            routerModules +=
+              '    {\n' +
+              `      path: '${children.path}',\n` +
+              `      name: '${page.path}_${children.path}',\n` +
+              `      meta: { title: '${children.name}' },\n` +
+              `      component: () => import('../../views/${page.path}/children/${children.path}')\n` +
+              `    }${index + 1 === page.children.length ? '' : ','}\n`
+          })
+          tempViewLayoutStr += '        </el-submenu>\n'
+          routerModules += '  ]\n}'
+        } else if (page.isMenu) {
+          routerModules =
+            'export default {\n' +
+            `  path: '/${page.path}',\n` +
+            `  meta: { title: '${page.name}' },\n` +
+            "  component: () => import('../../components/layout'),\n" +
+            `  redirect: { name: '${page.path}' },\n` +
             '  children: [\n' +
-            page.children
-              .map((children) => {
-                return (
-                  '    {\n' +
-                  `      path: '${children.path}',\n` +
-                  `      name: '${page.path}_${children.path}',\n` +
-                  `      meta: { title: '${children.name}' },\n` +
-                  `      component: () => import('../../views/${page.path}/children/${children.path}')\n` +
-                  '    }\n'
-                )
-              })
-              .join(',') +
+            '    {\n' +
+            `      path: '',\n` +
+            `      name: '${page.path}',\n` +
+            `      meta: { title: '${page.name}' },\n` +
+            `      component: () => import('../../views/${page.path}')\n` +
+            `    }\n` +
             '  ]\n' +
             '}'
-
-          zip.file(`src/router/modules/${page.path}.router.js`, routerModules)
-        } else if (page.isMenu) {
           tempViewLayoutStr = `        <el-menu-item index="/${page.path}">\n          ${page.name}\n        </el-menu-item>\n`
         }
+        zip.file(`src/router/modules/${page.path}.router.js`, routerModules)
         viewLayoutStr += tempViewLayoutStr
       })
 
@@ -155,6 +165,9 @@ export default {
       zip.file(PATH_COMPONENT_LAYOUT, getViewLayout(viewLayoutStr))
       zip.file(PATH_LIB_HTTP, getHttp())
       zip.file(PATH_UTIL_COMMON, getUtilsCommon())
+      zip.file(PATH_COMMON_ROUTER, getCommonRouter())
+      zip.file(PATH_VIEW_LOGIN, getViewLogin())
+      zip.file(PATH_VIEW_404, getView404())
       if (project.devPath) {
         zip.file(PATH_VUE_CONFIG, getVueConfig(project.devPath))
       }

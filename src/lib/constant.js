@@ -9,6 +9,9 @@ export const PATH_MAIN = 'src/main.js'
 export const PATH_VUE_CONFIG = 'vue.config.js'
 export const PATH_LIB_HTTP = 'src/lib/http.js'
 export const PATH_UTIL_COMMON = 'src/utils/commonUtil.js'
+export const PATH_COMMON_ROUTER = 'src/router/modules/common.router.js'
+export const PATH_VIEW_LOGIN = 'src/views/login.vue'
+export const PATH_VIEW_404 = 'src/views/404.vue'
 
 /** 项目管理 **/
 export const PROJECT_LIST = 'PROJECT_LIST'

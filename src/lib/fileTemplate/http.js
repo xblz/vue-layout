@@ -62,11 +62,11 @@ export default '' +
   "          showNotify('error', data.message || '未登录或登录已失效,请重新登录')\n" +
   '          try {\n' +
   '            router.push({\n' +
-  "              path: '/login',\n" +
-  "              query: { returnUrl: router.history.current.path === '/login' ? '/' : router.history.current.path }\n" +
+  "              path: '/',\n" +
+  '              query: { returnUrl: router.history.current.path }\n' +
   '            })\n' +
   '          } catch (e) {\n' +
-  "            router.push({ path: '/login' })\n" +
+  "            router.push({ path: '/' })\n" +
   '          }\n' +
   '        } else if (data.code === 403) {\n' +
   "          showNotify('error', data.message || '暂无访问权限')\n" +

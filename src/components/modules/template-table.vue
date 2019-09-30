@@ -8,12 +8,12 @@
             class="el-icon-setting"
             style="padding: 0 8px;cursor: pointer;"
             @click="handleClickEditCol(scope.$index)"
-          ></i>
+          />
           <i
             class="el-icon-delete"
             style="color: red;padding: 0 8px 0 0;cursor: pointer;"
             @click="handleClickDelCol(scope.$index)"
-          ></i>
+          />
         </template>
       </el-table-column>
       <el-table-column width="100px">

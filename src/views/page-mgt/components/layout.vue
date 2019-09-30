@@ -68,7 +68,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import draggable from 'vuedraggable'
-import components from '@/components'
+import components from '../../../components'
 import { getGuid, getHtml4String } from '../../../utils/commonUtil'
 
 export default {

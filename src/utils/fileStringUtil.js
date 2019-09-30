@@ -10,6 +10,9 @@ import emptyHtml from '../lib/fileTemplate/emptyHtml'
 import vueConfig from '../lib/fileTemplate/vueConfig'
 import http from '../lib/fileTemplate/http'
 import utilsCommon from '../lib/fileTemplate/utilsCommon'
+import commonRouter from '../lib/fileTemplate/commonRouter'
+import viewLogin from '../lib/fileTemplate/login'
+import view404 from '../lib/fileTemplate/404'
 
 export const getEmptyHtml = () => emptyHtml
 
@@ -25,6 +28,9 @@ export const getViewLayout = (str) => viewLayout.replace('${{viewLayout}}', str)
 
 export const getHttp = () => http
 export const getUtilsCommon = () => utilsCommon
+export const getCommonRouter = () => commonRouter
+export const getViewLogin = () => viewLogin
+export const getView404 = () => view404
 
 export const getRouter = (importsStr, routesStr) =>
   router.replace('${{imports}}', importsStr).replace('${{routes}}', routesStr)
