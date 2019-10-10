@@ -1,13 +1,13 @@
 export default '' +
-  "import Vue from 'vue'\n" +
-  "import Router from 'vue-router'\n" +
+  `import Vue from 'vue'\n` +
+  `import Router from 'vue-router'\n` +
   '\n' +
   '${{imports}}\n' +
   '\n' +
   'Vue.use(Router)\n' +
   '\n' +
   'const router = new Router({\n' +
-  "  mode: 'history',\n" +
+  `  mode: 'history',\n` +
   '  routes: [${{routes}}]\n' +
   '})\n' +
   '\n' +

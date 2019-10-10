@@ -1,5 +1,5 @@
 export default '' +
-  "import { Notification } from 'element-ui'\n" +
+  `import { Notification } from 'element-ui'\n` +
   '\n' +
   'const setLocalStorage = (key, value) => {\n' +
   '  window.localStorage.setItem(key, JSON.stringify(value))\n' +
@@ -18,11 +18,11 @@ export default '' +
   'const showNotify = function(type, message) {\n' +
   '  if (!message) {\n' +
   '    message = type\n' +
-  "    type = 'success'\n" +
+  `    type = 'success'\n` +
   '  }\n' +
   '  notify && notify.close()\n' +
   '  notify = Notification({\n' +
-  "    title: '温馨提示',\n" +
+  `    title: '温馨提示',\n` +
   '    showClose: false,\n' +
   '    duration: 2000,\n' +
   '    type,\n' +
@@ -34,12 +34,12 @@ export default '' +
   '}\n' +
   '\n' +
   'const downloadExcel = function(data, filename) {\n' +
-  "  if ('msSaveOrOpenBlob' in navigator) {\n" +
+  `  if ('msSaveOrOpenBlob' in navigator) {\n` +
   '    // Microsoft Edge and Microsoft Internet Explorer 10-11\n' +
   '    window.navigator.msSaveOrOpenBlob(data, filename)\n' +
   '  } else {\n' +
-  "    const blob = new Blob([data], { type: 'application/vnd.ms-excel;charset=utf-8' })\n" +
-  "    const downloadElement = document.createElement('a')\n" +
+  `    const blob = new Blob([data], { type: 'application/vnd.ms-excel;charset=utf-8' })\n` +
+  `    const downloadElement = document.createElement('a')\n` +
   '    const href = window.URL.createObjectURL(blob) //创建下载的链接\n' +
   '    downloadElement.href = href\n' +
   '    downloadElement.download = filename //下载后文件名\n' +

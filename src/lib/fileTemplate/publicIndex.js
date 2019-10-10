@@ -9,7 +9,7 @@ export default '' +
   '  </head>\n' +
   '  <body>\n' +
   '    <noscript>\n' +
-  "      <strong>We're sorry but temp doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>\n" +
+  `      <strong>We're sorry but temp doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>\n` +
   '    </noscript>\n' +
   '    <div id="app"></div>\n' +
   '    <!-- built files will be auto injected -->\n' +

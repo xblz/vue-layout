@@ -2,7 +2,7 @@ export default '' +
   'html,\n' +
   'body {\n' +
   '  height: 100%;\n' +
-  "  font-family: 'Avenir', Helvetica, Arial, sans-serif;\n" +
+  `  font-family: 'Avenir', Helvetica, Arial, sans-serif;\n` +
   '}\n' +
   '\n' +
   '* {\n' +
@@ -95,7 +95,7 @@ export default '' +
   '\n' +
   'form.fixed-width {\n' +
   '  & > .el-row {\n' +
-  "    & > [class*='el-col-'] {\n" +
+  `    & > [class*='el-col-'] {\n` +
   '      padding-right: 25px;\n' +
   '    }\n' +
   '    @for $i from 1 through 20 {\n' +

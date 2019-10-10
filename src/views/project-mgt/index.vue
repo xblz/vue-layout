@@ -110,7 +110,7 @@ export default {
             'export default {\n' +
             `  path: '/${page.path}',\n` +
             `  meta: { title: '${page.name}' },\n` +
-            "  component: () => import('../../components/layout'),\n" +
+            `  component: () => import('../../components/layout'),\n` +
             `  redirect: { name: '${page.path}_${page.children[0].path}' },\n` +
             '  children: [\n'
 
@@ -139,7 +139,7 @@ export default {
             'export default {\n' +
             `  path: '/${page.path}',\n` +
             `  meta: { title: '${page.name}' },\n` +
-            "  component: () => import('../../components/layout'),\n" +
+            `  component: () => import('../../components/layout'),\n` +
             `  redirect: { name: '${page.path}' },\n` +
             '  children: [\n' +
             '    {\n' +
@@ -172,9 +172,7 @@ export default {
         zip.file(PATH_VUE_CONFIG, getVueConfig(project.devPath))
       }
 
-      zip.generateAsync({ type: 'blob' }).then(function(content) {
-        fileSaver.saveAs(content, `${project.name}.zip`)
-      })
+      zip.generateAsync({ type: 'blob' }).then((content) => fileSaver.saveAs(content, `${project.name}.zip`))
     },
     handleClickDetail(project) {
       this.$router.push({ path: '/page', query: { projectId: project.projectId } })
